@@ -103,7 +103,8 @@ defmodule NodeJS.Supervisor do
         [
           path,
           get_unsecure_tls_setting(opts),
-          get_proxy_setting(opts)
+          get_proxy_setting(opts),
+          get_no_proxy_setting(opts)
         ]
       )
     ]
@@ -121,11 +122,24 @@ defmodule NodeJS.Supervisor do
 
   defp get_proxy_setting(opts) do
     case Keyword.get(opts, :proxy_settings, nil) do
-      nil -> nil
+      nil ->
+        nil
+
       %{http: connection_uri} ->
         {'HTTP_PROXY', String.to_charlist(connection_uri)}
+
       %{https: connection_uri} ->
         {'HTTPS_PROXY', String.to_charlist(connection_uri)}
+    end
+  end
+
+  defp get_no_proxy_setting(opts) do
+    case Keyword.get(opts, :proxy_settings, nil) do
+      %{no_proxy: no_proxy} when is_binary(no_proxy) and no_proxy !== "" ->
+        {'NO_PROXY', String.to_charlist(no_proxy)}
+
+      _ ->
+        nil
     end
   end
 end
