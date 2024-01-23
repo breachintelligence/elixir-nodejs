@@ -103,7 +103,8 @@ defmodule NodeJS.Supervisor do
         [
           path,
           get_unsecure_tls_setting(opts),
-          get_proxy_setting(opts),
+          get_https_proxy_setting(opts),
+          get_http_proxy_setting(opts),
           get_no_proxy_setting(opts)
         ]
       )
@@ -120,16 +121,23 @@ defmodule NodeJS.Supervisor do
     end
   end
 
-  defp get_proxy_setting(opts) do
+  defp get_http_proxy_setting(opts) do
     case Keyword.get(opts, :proxy_settings, nil) do
-      nil ->
-        nil
-
-      %{http: connection_uri} ->
+      %{http: connection_uri} when is_binary(connection_uri) and connection_uri !== ""  ->
         {'HTTP_PROXY', String.to_charlist(connection_uri)}
 
-      %{https: connection_uri} ->
+      _ ->
+        nil
+    end
+  end
+
+  defp get_https_proxy_setting(opts) do
+    case Keyword.get(opts, :proxy_settings, nil) do
+      %{https: connection_uri} when is_binary(connection_uri) and connection_uri !== ""  ->
         {'HTTPS_PROXY', String.to_charlist(connection_uri)}
+
+      _ ->
+        nil
     end
   end
 
