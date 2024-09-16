@@ -1,7 +1,7 @@
 defmodule NodeJS.Supervisor do
   use Supervisor
 
-  @timeout 30_000
+  @timeout 60_000
   @default_pool_size 4
 
   @moduledoc """
