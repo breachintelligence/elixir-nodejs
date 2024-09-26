@@ -45,6 +45,8 @@ defmodule NodeJS.Worker do
   # --- GenServer Callbacks ---
   @doc false
   def init([module_path, unsecure_tls, https_proxy_settings, http_proxy_settings, no_proxy_settings]) do
+    Process.flag(:trap_exit, true)
+
     node = System.find_executable("node")
 
     port =
@@ -60,6 +62,9 @@ defmodule NodeJS.Worker do
 
   defp get_response(data, timeout) do
     receive do
+      {:EXIT, _, _} ->
+        {:error, :exit}
+
       {_, {:data, {flag, chunk}}} ->
         data = data ++ chunk
 
@@ -110,6 +115,9 @@ defmodule NodeJS.Worker do
 
       {:error, :timeout} ->
         {:reply, {:error, :timeout}, state}
+
+      {:error, :exit} ->
+        {:stop, :exit, {:error, :exit}, state}
     end
   end
 
