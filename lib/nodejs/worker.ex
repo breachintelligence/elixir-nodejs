@@ -115,7 +115,7 @@ defmodule NodeJS.Worker do
   end
 
 def handle_info({_port, {:data, {:eol, message}}}, state) do
-  Logger.error("Node.js process closed. Message: #{inspect(message)}")
+  Logger.debug("Node.js process closed. Message: #{inspect(message)}")
   {:noreply, state}
 end
 
