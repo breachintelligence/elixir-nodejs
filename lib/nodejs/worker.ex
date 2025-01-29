@@ -1,5 +1,6 @@
 defmodule NodeJS.Worker do
   use GenServer
+  require Logger
 
   # Port can't do more than this.
   @read_chunk_size 65_536
@@ -112,6 +113,11 @@ defmodule NodeJS.Worker do
         {:reply, {:error, :timeout}, state}
     end
   end
+
+def handle_info({_port, {:data, {:eol, message}}}, state) do
+  Logger.error("Node.js process closed. Message: #{inspect(message)}")
+  {:noreply, state}
+end
 
   defp decode(data) do
     data
