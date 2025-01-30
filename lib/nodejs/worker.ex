@@ -114,8 +114,19 @@ defmodule NodeJS.Worker do
     end
   end
 
-def handle_info({_port, {:data, {:eol, message}}}, state) do
-  Logger.debug("Node.js process closed. Message: #{inspect(message)}")
+# The handle_info/2 clause directly below only needs to be used when debugging.
+# Don't want to deploy since this line will get hit / logged often with an :eol message.
+# These messages don't point to any real problem.
+# The generic `handle_info(_msg, state)` clause will catch / handle all of these messages
+
+# def handle_info({_port, {:data, {flag, message}}}, state) when is_atom(flag) do
+#   # Logger.warning("#{__MODULE__}: worker caught message with flag: #{inspect(flag)}")
+#   {:noreply, state}
+# end
+
+def handle_info({_port, {:exit_status, status}}, state), do: {:stop, :normal, state}
+
+def handle_info(_msg, state) do
   {:noreply, state}
 end
 
