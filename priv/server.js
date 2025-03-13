@@ -4,6 +4,26 @@ const WRITE_CHUNK_SIZE = parseInt(process.env.WRITE_CHUNK_SIZE, 10)
 
 const PREFIX = "__elixirnodejs__UOSBsDUP6bp9IF5__";
 
+const serializeError = error => {
+  let errorObject = typeof error === 'object'? error: Object({detail: error});
+
+  return Object.getOwnPropertyNames(errorObject).reduce(
+    (acc, prop_name) => {
+      acc[prop_name] = errorObject[prop_name];
+      return acc
+    },
+    {}
+  );
+};
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Promise Rejection:', reason);
+
+  console.log(
+    `${PREFIX}${JSON.stringify([false, serializeError(reason)])}`
+  );
+});
+
 function requireModule(modulePath) {
   // When not running in production mode, refresh the cache on each call.
   if (process.env.NODE_ENV !== 'production') {
