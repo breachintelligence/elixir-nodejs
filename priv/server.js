@@ -17,8 +17,6 @@ const serializeError = error => {
 };
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Promise Rejection:', reason);
-
   console.log(
     `${PREFIX}${JSON.stringify([false, serializeError(reason)])}`
   );
