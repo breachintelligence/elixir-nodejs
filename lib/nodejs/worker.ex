@@ -62,13 +62,14 @@ defmodule NodeJS.Worker do
   defp get_response(data, timeout) do
     receive do
       {_, {:data, {flag, chunk}}} ->
-        data = data ++ chunk
+        data = [chunk | data]
 
         case flag do
           :noeol ->
             get_response(data, timeout)
 
           :eol ->
+            data = data |> Enum.reverse() |> List.flatten()
             case data do
               @prefix ++ protocol_data ->
                 {:ok, protocol_data}
