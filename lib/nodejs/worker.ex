@@ -11,24 +11,42 @@ defmodule NodeJS.Worker do
   @prefix '__elixirnodejs__UOSBsDUP6bp9IF5__'
 
   @nodejs_env_white_list [
-    "NODE_PATH",
-    "WRITE_CHUNK_SIZE",
-    "NODE_TLS_REJECT_UNAUTHORIZED",
-    "HTTPS_PROXY",
-    "HTTP_PROXY",
-    "NO_PROXY",
-    "NVM_BIN",
-    "HOME",
-    "USER",
-    "LOGNAME",
-    "PATH",
-    "TMPDIR",
-    "TMP",
-    "TEMP",
-    "TERM",
-    "COLORTERM",
-    "LANG"
-  ]
+  "ASDF_DIR",
+  "ASDF_INSTALL_PATH",
+  "ASDF_INSTALL_TYPE",
+  "ASDF_INSTALL_VERSION",
+  "COLORTERM",
+  "EDITOR",
+  "HOME",
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
+  "LANG",
+  "LOGNAME",
+  "NO_PROXY",
+  "NODE_ENV",
+  "NODE_PATH",
+  "NODE_TLS_REJECT_UNAUTHORIZED",
+  "NVM_BIN",
+  "NVM_CD_FLAGS",
+  "NVM_DIR",
+  "NVM_INC",
+  "PATH",
+  "PWD",
+  "SENTRY_ENVIRONMENT",
+  "SHELL",
+  "SSH_AUTH_SOCK",
+  "TERM",
+  "TERM_PROGRAM",
+  "TERM_PROGRAM_VERSION",
+  "TERM_SESSION_ID",
+  "TEMP",
+  "TMP",
+  "TMPDIR",
+  "USER",
+  "WRITE_CHUNK_SIZE"
+]
+
+
 
   @moduledoc """
   A genserver that controls the starting of the node service
