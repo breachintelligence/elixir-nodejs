@@ -194,8 +194,22 @@ defmodule NodeJS.Worker do
         {:reply, decoded_response, state}
 
       {:error, :timeout} ->
-        {:reply, {:error, :timeout}, state}
+        Logger.warning("#{__MODULE__}: call timed out, killing hung node process")
+        kill_port(port)
+        {:stop, {:shutdown, :timeout}, {:error, :timeout}, state}
     end
+  end
+
+  # Forcibly kills the OS process backing the port. Closing the port alone only
+  # sends EOF to the node process's stdin, which it may never notice if it's
+  # stuck in synchronous, CPU-bound work.
+  defp kill_port(port) do
+    case Port.info(port, :os_pid) do
+      {:os_pid, os_pid} -> System.cmd("kill", ["-9", to_string(os_pid)])
+      nil -> :ok
+    end
+  catch
+    _, _ -> :ok
   end
 
   # The handle_info/2 clause directly below only needs to be used when debugging.
